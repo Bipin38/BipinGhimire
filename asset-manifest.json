@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/BipinGhimire/static/css/main.f58c9731.css",
+    "main.js": "/BipinGhimire/static/js/main.2e69e43b.js",
+    "static/media/cv.pdf": "/BipinGhimire/static/media/cv.1676dcdc83730930d888.pdf",
+    "static/media/photo-own6lguhZ-transformed.png": "/BipinGhimire/static/media/photo-own6lguhZ-transformed.c016c2158456ea26ea2c.png",
+    "static/media/ME.jpg": "/BipinGhimire/static/media/ME.15549580f2ee7fedea6e.jpg",
+    "index.html": "/BipinGhimire/index.html",
+    "main.f58c9731.css.map": "/BipinGhimire/static/css/main.f58c9731.css.map",
+    "main.2e69e43b.js.map": "/BipinGhimire/static/js/main.2e69e43b.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f58c9731.css",
+    "static/js/main.2e69e43b.js"
+  ]
+}
