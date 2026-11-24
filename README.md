@@ -1,6 +1,6 @@
 # bipin38.github.io/BipinGhimire
 
-Personal site of Bipin Ghimire, a data engineer and AI researcher. It's a static site built with [Astro](https://astro.build) and TypeScript, styled with Tailwind CSS 4, and uses React for one interactive island (the ⌘K menu).
+Personal site of Bipin Ghimire, a data engineer and AI researcher. It's a static site built with [Astro](https://astro.build) and TypeScript, and styled with Tailwind CSS 4. It ships almost no JavaScript: just the theme toggle and the copy-email button.
 
 ## Run it
 
@@ -38,9 +38,9 @@ All content lives in typed data files. Components only render it.
   photo,
   ```
 
-  Astro resizes it and converts it to modern formats at build time. Until a photo is set, a placeholder frame shows instead.
+  Astro resizes it and converts it to modern formats at build time. The current photo is `src/assets/portrait.png`; replace that file to change it.
 
-- **Résumé.** Put the PDF at `public/resume.pdf` and set `resume: 'resume.pdf'` in `profile.ts`. The Résumé button and the ⌘K entry stay hidden until you do.
+- **Résumé.** Put the PDF at `public/resume.pdf` and set `resume: 'resume.pdf'` in `profile.ts`. The Résumé button stays hidden until you do.
 - **Social card.** `public/og.png` is a screenshot of `scripts/og.html`. If you change your name or role, regenerate it:
 
   ```sh
@@ -65,7 +65,7 @@ src/
   data/         content (typed)
   pages/        index.astro, 404.astro, projects/*.mdx
   layouts/      Base.astro (head, header, footer), CaseStudy.astro
-  components/   Section, ProjectSpec, ProjectRows, Pipeline, CommandPalette.tsx
+  components/   Section, ProjectSpec, ProjectRows, Pipeline
   styles/       global.css (theme tokens, Tailwind)
   lib/theme.ts  theme toggle + base-path helper
 public/         favicons, og.png
