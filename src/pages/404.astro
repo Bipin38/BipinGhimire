@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import { withBase } from '../lib/theme';
+---
+
+<Base title="Not found — Bipin Ghimire" description="This page doesn’t exist.">
+  <section class="grid gap-8 py-24 md:py-32 lg:grid-cols-12 lg:gap-10">
+    <p class="label lg:col-span-3">
+      <span class="text-accent">404</span> — Not found
+    </p>
+    <div class="lg:col-span-9">
+      <h1 class="text-4xl font-semibold tracking-tight md:text-5xl">Nothing at this address.</h1>
+      <p class="text-muted mt-4 max-w-xl text-lg">The page may have moved when this site was rebuilt.</p>
+      <a href={withBase()} class="btn btn-primary mt-8">
+        Go to the home page <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+</Base>
