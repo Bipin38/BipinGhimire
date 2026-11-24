@@ -1,5 +1,5 @@
 import { Command } from 'cmdk';
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useEffect, useEffectEvent, useRef, useState, useSyncExternalStore } from 'react';
 import { toggleTheme } from '../lib/theme';
 
 export interface PaletteItem {
@@ -15,18 +15,38 @@ interface Props {
 }
 
 const noSubscribe = () => () => {};
+// Every typed word must appear; cmdk's default fuzzy scoring surfaces unrelated items.
+const filter = (value: string, search: string) => {
+  const v = value.toLowerCase();
+  return search
+    .toLowerCase()
+    .split(/\s+/)
+    .every((w) => v.includes(w))
+    ? 1
+    : 0;
+};
 const modKey = () => (/Mac|iPhone|iPad/.test(navigator.userAgent) ? '⌘' : 'Ctrl ');
 
 export default function CommandPalette({ items, email }: Props) {
   const [open, setOpen] = useState(false);
   // Server HTML shows ⌘; the client swaps in Ctrl on non-Apple platforms after hydration.
   const mod = useSyncExternalStore(noSubscribe, modKey, () => '⌘');
+  const returnTo = useRef<Element | null>(null);
 
+  // Radix only restores focus to its own Dialog.Trigger, which cmdk doesn't use, so do it here.
+  const onOpenChange = (next: boolean) => {
+    if (next) returnTo.current = document.activeElement;
+    setOpen(next);
+    const el = returnTo.current;
+    if (!next && el instanceof HTMLElement) requestAnimationFrame(() => el.focus());
+  };
+
+  const onShortcut = useEffectEvent(() => onOpenChange(!open));
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key.toLowerCase() === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        setOpen((o) => !o);
+        onShortcut();
       }
     };
     document.addEventListener('keydown', onKey);
@@ -34,7 +54,7 @@ export default function CommandPalette({ items, email }: Props) {
   }, []);
 
   const run = (item: PaletteItem) => {
-    setOpen(false);
+    onOpenChange(false);
     if (item.action === 'theme') toggleTheme();
     else if (item.action === 'copy-email') void navigator.clipboard.writeText(email);
     else if (item.href?.startsWith('http')) window.open(item.href, '_blank', 'noopener');
@@ -47,7 +67,7 @@ export default function CommandPalette({ items, email }: Props) {
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={() => onOpenChange(true)}
         aria-keyshortcuts="Meta+K Control+K"
         className="border-line hover:border-text text-muted inline-flex h-9 items-center gap-2 border px-2.5 font-mono text-xs transition-colors"
       >
@@ -60,14 +80,15 @@ export default function CommandPalette({ items, email }: Props) {
 
       <Command.Dialog
         open={open}
-        onOpenChange={setOpen}
+        onOpenChange={onOpenChange}
         label="Command menu"
+        filter={filter}
         overlayClassName="fixed inset-0 z-50 bg-black/50 backdrop-blur-[2px]"
         contentClassName="fixed inset-x-4 top-[12vh] z-50 mx-auto max-w-xl border border-line bg-bg shadow-2xl"
       >
         <Command.Input
           placeholder="Type a section, project, or action…"
-          className="border-line placeholder:text-muted w-full border-b bg-transparent px-4 py-3.5 text-base outline-none"
+          className="border-line placeholder:text-muted focus:border-accent w-full border-b bg-transparent px-4 py-3.5 text-base outline-none"
         />
         <Command.List className="max-h-[60vh] overflow-y-auto p-2">
           <Command.Empty className="text-muted px-3 py-6 text-center text-sm">No results.</Command.Empty>

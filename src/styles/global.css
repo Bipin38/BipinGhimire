@@ -140,8 +140,11 @@
     navigation: auto;
   }
   @supports (animation-timeline: view()) {
+    /* Longhands on purpose: the minifier folds a shorthand + animation-timeline into an invalid shorthand. */
     .reveal {
-      animation: reveal linear both;
+      animation-name: reveal;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
       animation-timeline: view();
       animation-range: entry 0% entry 35%;
     }
