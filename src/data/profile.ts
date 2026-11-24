@@ -1,4 +1,5 @@
 import type { ImageMetadata } from 'astro';
+import portrait from '../assets/portrait.png';
 
 export interface Link {
   label: string;
@@ -29,6 +30,7 @@ export const profile: Profile = {
     'I build production data platforms on AWS and Azure, and research multimodal perception, vision-language models, and 3D grounding.',
   location: 'United States',
   email: 'bipin.ghimire692@gmail.com',
+  photo: portrait,
   bio: [
     'I’m a data engineer and M.S. Computer Science student at the University of Wyoming, where I work as a graduate research assistant on multimodal perception, vision-language models, and 3D grounding for assistive systems.',
     'Before graduate school I spent two years at Fusemachines building data platforms for clients: migrating Oracle workloads to Azure Databricks, engineering ingestion pipelines across messy external sources, and standing up a company-wide analytics platform from scratch.',
