@@ -27,7 +27,7 @@ export const profile: Profile = {
   role: 'Data engineer & AI researcher',
   tagline:
     'I build production data platforms on AWS and Azure, and research multimodal perception, vision-language models, and 3D grounding.',
-  location: 'Laramie, WY',
+  location: 'United States',
   email: 'bipin.ghimire692@gmail.com',
   bio: [
     'I’m a data engineer and M.S. Computer Science student at the University of Wyoming, where I work as a graduate research assistant on multimodal perception, vision-language models, and 3D grounding for assistive systems.',
@@ -38,7 +38,7 @@ export const profile: Profile = {
     { label: 'Focus', value: 'Data platforms · Multimodal vision · VLM evaluation' },
     { label: 'Stack', value: 'Python, SQL, PySpark, AWS, Azure Databricks, PyTorch' },
     { label: 'Now', value: 'M.S. Computer Science, University of Wyoming (2027)' },
-    { label: 'Based in', value: 'Laramie, WY' },
+    { label: 'Based in', value: 'United States' },
   ],
   links: {
     github: { label: 'GitHub', href: 'https://github.com/Bipin38' },
