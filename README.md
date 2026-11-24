@@ -1,70 +1,72 @@
-# Getting Started with Create React App
+# bipin38.github.io/BipinGhimire
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Personal site of Bipin Ghimire, a data engineer and AI researcher. It's a static site built with [Astro](https://astro.build) and TypeScript, styled with Tailwind CSS 4, and uses React for one interactive island (the ⌘K menu).
 
-## Available Scripts
+## Run it
 
-In the project directory, you can run:
+Requires Node 22.23.4 or newer. `.node-version` pins 24, so `fnm` and `nvm` pick it up automatically.
 
-### `npm start`
+```sh
+npm install
+npm run dev        # http://localhost:4321/BipinGhimire/
+npm run build      # static output in dist/
+npm run preview    # serve dist/ locally
+npm run check      # astro check + tsc, ESLint, Prettier (what CI runs)
+npm run format     # fix formatting
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Edit content
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+All content lives in typed data files. Components only render it.
 
-### `npm test`
+| What                                                | File                            |
+| --------------------------------------------------- | ------------------------------- |
+| Name, role, tagline, bio, contact, education, certs | `src/data/profile.ts`           |
+| Projects (engineering and research)                 | `src/data/projects.ts`          |
+| Experience timeline                                 | `src/data/experience.ts`        |
+| Skills                                              | `src/data/skills.ts`            |
+| Publications                                        | `src/data/publications.ts`      |
+| Case-study pages                                    | `src/pages/projects/<slug>.mdx` |
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Projects.** `featured: true` gives a project the full spec table, and the rest appear in the compact "Also built" list. `kind` puts it under Work or Research.
+- **Case studies.** To add one, set `caseStudy: true` on the project and create `src/pages/projects/<slug>.mdx` with `layout: ../../layouts/CaseStudy.astro` and `slug: <slug>` in the frontmatter. Use `<Pipeline>` for architecture figures (see the existing case studies).
+- **Photo.** Put the image in `src/assets/`, then set `photo` in `profile.ts`:
 
-### `npm run build`
+  ```ts
+  import photo from '../assets/photo.jpg';
+  // ...
+  photo,
+  ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  Astro resizes it and converts it to modern formats at build time. Until a photo is set, a placeholder frame shows instead.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Résumé.** Put the PDF at `public/resume.pdf` and set `resume: 'resume.pdf'` in `profile.ts`. The Résumé button and the ⌘K entry stay hidden until you do.
+- **Social card.** `public/og.png` is a screenshot of `scripts/og.html`. If you change your name or role, regenerate it:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  ```sh
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --hide-scrollbars \
+    --window-size=1200,630 --screenshot="$PWD/public/og.png" "file://$PWD/scripts/og.html"
+  ```
 
-### `npm run eject`
+`docs/` is git-ignored. It holds the private source résumé, which must not be published.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Deploy
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+`.github/workflows/deploy.yml` runs the checks and the build on every pull request. On every push to `master` it also deploys `dist/` to GitHub Pages.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+**One-time setup:** go to _Settings → Pages → Build and deployment → Source_ and select **GitHub Actions**. The old `gh-pages` branch is no longer used once you do this.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+The site is served from `/BipinGhimire/` (`base` in `astro.config.mjs`). Changing it changes every public URL. The home-page anchors `#about`, `#experience` and `#contact` from the previous site still work, and `#portfolio` jumps to Work.
 
-## Learn More
+## Structure
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+src/
+  data/         content (typed)
+  pages/        index.astro, 404.astro, projects/*.mdx
+  layouts/      Base.astro (head, header, footer), CaseStudy.astro
+  components/   Section, ProjectSpec, ProjectRows, Pipeline, CommandPalette.tsx
+  styles/       global.css (theme tokens, Tailwind)
+  lib/theme.ts  theme toggle + base-path helper
+public/         favicons, og.png
+```
