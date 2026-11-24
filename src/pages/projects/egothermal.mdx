@@ -1,0 +1,52 @@
+---
+layout: ../../layouts/CaseStudy.astro
+slug: egothermal
+---
+
+import Pipeline from '../../components/Pipeline.astro';
+
+## Context
+
+EgoThermal is an egocentric RGB-depth-thermal dataset and benchmark for physical awareness in wearable assistive devices. The question behind it: can detectors and vision-language models tell how far away an object is, how hot it is, and what state it’s in — a stove burner that’s on, say — and which sensor inputs help them do it?
+
+I led dataset acquisition and benchmark development.
+
+## From capture to benchmark
+
+<Pipeline
+  caption="Fig. 1 — Dataset and benchmark pipeline"
+  steps={[
+    { title: 'Capture', detail: 'Head-mounted stereo RGB + thermal prototype, synchronized collection' },
+    { title: 'Depth', detail: 'Stereo rectification and depth estimation' },
+    { title: 'Register', detail: 'Thermal-to-RGB registration and data alignment' },
+    { title: 'Annotate', detail: 'Class, region, median stereo distance, apparent temperature, operational state' },
+    { title: 'Generate', detail: '40,078 template-based VQA pairs with deterministic answers' },
+    { title: 'Evaluate', detail: 'Six frozen VLMs and Faster R-CNN baselines across modalities' },
+  ]}
+/>
+
+### The dataset
+
+- **1,768** indoor scenes, **7,598** annotated objects, **65** classes, **11** rooms.
+- Lighting-shift and dark-scene scenarios.
+- Object annotations carry median stereo distance, apparent radiometric temperature, and operational-state labels where they apply.
+
+### The benchmark
+
+- 40,078 rule/template-based VQA pairs across nine categories, with deterministic answer generation, filtering, and evaluation tolerances.
+- Splits and scripts for unseen-environment tests, sensor-input comparisons, hazard localization, temperature regression, and low-light evaluation.
+- Six frozen VLMs with no task-specific fine-tuning: Qwen2.5-VL-7B, Qwen2-VL-7B, InternVL3-8B, Idefics3-8B, and Qwen3-VL 8B / 32B.
+- Sensor data presented five ways: RGB only, color-mapped thermal and depth images, explicit per-object values, numeric overlays on the image, and detector-box sensor readouts.
+
+## Findings
+
+- **VLMs read numbers better than heatmaps.** Qwen2.5-VL’s accuracy on joint distance–temperature questions rose from 0.48 with rendered depth/thermal imagery to 0.89 with annotation-derived numeric measurements.
+- **Thermal reveals state that RGB can’t.** For stove-burner state, RGB scores an AUROC of 0.51 — essentially chance — versus about 0.83 with thermal.
+- **Temperature regression.** MAE of 24.6 °C from RGB versus about 7.0–7.3 °C from thermal, against sensor-derived reference values.
+- **Hazard localization.** Faster R-CNN AP50 rises from 0.695 (RGB) to 0.869 (RGB + thermal) on unseen kitchens. Under environmental shift it’s 0.29 versus 0.73, with benchmark warning precision / recall of 0.93 / 0.99.
+
+The analysis also covers sensor uncertainty, registration error, clipping, false detections, and where models fall short when reading sensor images directly.
+
+## Status
+
+The manuscript is under review.

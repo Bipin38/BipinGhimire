@@ -228,8 +228,7 @@ export const projects: Project[] = [
     kind: 'research',
     featured: true,
     status: 'Workshop manuscript',
-    problem:
-      'Ground small objects in previously scanned 3D scenes on a compute budget that suits smart glasses.',
+    problem: 'Ground small objects in previously scanned 3D scenes on a compute budget that suits smart glasses.',
     approach: [
       'RVC-style multi-view consensus with a 4B VLM and only four rendered views.',
       'SAM segmentation and visibility-weighted Gaussian consensus with candidate verification.',
