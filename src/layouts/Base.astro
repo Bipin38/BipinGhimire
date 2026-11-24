@@ -1,0 +1,160 @@
+---
+import { Font } from 'astro:assets';
+import '../styles/global.css';
+import CommandPalette, { type PaletteItem } from '../components/CommandPalette';
+import { profile } from '../data/profile';
+import { projects } from '../data/projects';
+import { withBase } from '../lib/theme';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = `${profile.name} — ${profile.role}`, description = `${profile.role}. ${profile.tagline}` } =
+  Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(withBase('og.png'), Astro.site);
+const revision = new Date().toISOString().slice(0, 10);
+
+const nav = [
+  { href: withBase('#about'), label: 'About' },
+  { href: withBase('#work'), label: 'Work' },
+  { href: withBase('#data-ai'), label: 'Research' },
+  { href: withBase('#experience'), label: 'Experience' },
+  { href: withBase('#contact'), label: 'Contact' },
+];
+
+const paletteItems: PaletteItem[] = [
+  ...nav.map((n) => ({ group: 'Sections', ...n })),
+  { group: 'Sections', label: 'Skills', href: withBase('#skills') },
+  ...projects
+    .filter((p) => p.caseStudy)
+    .map((p) => ({ group: 'Case studies', label: p.title, href: withBase(`projects/${p.slug}/`) })),
+  ...projects.map((p) => ({ group: 'Projects', label: p.title, href: withBase(`#${p.slug}`) })),
+  { group: 'Links', label: 'GitHub', href: profile.links.github.href },
+  { group: 'Links', label: 'LinkedIn', href: profile.links.linkedin.href },
+  { group: 'Links', label: 'Email', href: `mailto:${profile.email}` },
+  ...(profile.resume ? [{ group: 'Links', label: 'Résumé (PDF)', href: withBase(profile.resume) }] : []),
+  { group: 'Actions', label: 'Toggle light / dark theme', action: 'theme' },
+  { group: 'Actions', label: 'Copy email address', action: 'copy-email' },
+];
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#0e1011" />
+    <meta name="author" content={profile.name} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={profile.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${profile.name} — ${profile.role}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" href={withBase('favicon.ico')} sizes="32x32" />
+    <link rel="icon" href={withBase('favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={withBase('apple-touch-icon.png')} />
+    <link rel="sitemap" href={withBase('sitemap-index.xml')} />
+
+    <Font cssVariable="--font-plex-sans" />
+    <Font cssVariable="--font-plex-mono" />
+
+    <script is:inline>
+      try {
+        document.documentElement.dataset.theme = localStorage.getItem('theme') || 'dark';
+      } catch {
+        /* storage blocked: stay dark */
+      }
+    </script>
+  </head>
+
+  <body class="min-h-dvh">
+    <a
+      href="#main"
+      class="bg-accent text-bg sr-only z-50 px-4 py-2 font-mono text-sm focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+    >
+      Skip to content
+    </a>
+
+    <header class="border-line bg-bg/85 sticky top-0 z-40 border-b backdrop-blur">
+      <div class="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 px-5 md:px-8">
+        <a href={withBase()} class="py-4 font-mono text-sm font-medium tracking-tight hover:text-accent">
+          {profile.name}
+        </a>
+        <nav
+          aria-label="Primary"
+          class="order-last -mx-5 w-[calc(100%+2.5rem)] overflow-x-auto md:order-none md:mx-0 md:w-auto"
+        >
+          <ul class="flex gap-5 px-5 pb-3 md:px-0 md:pb-0">
+            {nav.map((n) => (
+              <li>
+                <a href={n.href} class="label hover:text-text transition-colors">
+                  {n.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div class="ml-auto flex items-center gap-2">
+          <CommandPalette client:idle items={paletteItems} email={profile.email} />
+          <button
+            id="theme-toggle"
+            type="button"
+            aria-label="Toggle light and dark theme"
+            class="border-line hover:border-text text-muted hover:text-text inline-flex size-9 items-center justify-center border transition-colors"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              class="size-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="mx-auto max-w-7xl px-5 md:px-8">
+      <slot />
+    </main>
+
+    <footer class="border-line mt-24 border-t">
+      <div class="label mx-auto flex max-w-7xl flex-wrap gap-x-8 gap-y-2 px-5 py-8 md:px-8">
+        <span>
+          © {new Date().getFullYear()} {profile.name}
+        </span>
+        <span>Rev. {revision}</span>
+        <a href="https://github.com/Bipin38/BipinGhimire" class="ext hover:text-text">
+          Source
+        </a>
+        <span class="md:ml-auto">Built with Astro · Set in IBM Plex</span>
+      </div>
+    </footer>
+
+    <script>
+      import { toggleTheme } from '../lib/theme';
+      document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
+    </script>
+  </body>
+</html>

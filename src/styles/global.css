@@ -1,0 +1,155 @@
+@import 'tailwindcss';
+
+/* Theme tokens. Dark is the default; [data-theme='light'] is set by the toggle. */
+:root {
+  --bg: #0e1011;
+  --surface: #16191b;
+  --line: #2a2e31;
+  --text: #e8e6e1;
+  --muted: #9c9b95;
+  --accent: #ff7a45;
+  color-scheme: dark;
+}
+:root[data-theme='light'] {
+  --bg: #f3f1ec;
+  --surface: #eae7e0;
+  --line: #d4d0c6;
+  --text: #151515;
+  --muted: #5c5b56;
+  --accent: #b23809;
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    scroll-padding-top: 6rem;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--bg);
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  a {
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+}
+
+@layer components {
+  /* Mono label used for section numbers, spec keys, and metadata. */
+  .label {
+    @apply font-mono text-xs tracking-wider text-muted uppercase;
+  }
+  .tag {
+    @apply border-line inline-block border px-1.5 py-0.5 font-mono text-[0.72rem] leading-tight text-muted;
+  }
+  .btn {
+    @apply border-line inline-flex items-center gap-2 border px-4 py-2.5 font-mono text-sm transition-colors hover:border-text;
+  }
+  .btn-primary {
+    @apply border-accent bg-accent text-bg hover:border-text hover:bg-text;
+  }
+  /* External links get a footnote-style marker. */
+  .ext::after {
+    content: '↗';
+    @apply ml-0.5 inline-block text-[0.75em] text-muted transition-transform;
+  }
+  .ext:hover::after {
+    transform: translate(1px, -1px);
+  }
+  .arrow-link {
+    @apply inline-flex items-center gap-1.5 font-mono text-sm text-accent hover:underline;
+  }
+
+  /* Crop-mark corners, as on a printed spec sheet. */
+  .ticks {
+    --t: 10px;
+    --c: var(--muted);
+    background:
+      linear-gradient(var(--c), var(--c)) top left / var(--t) 1px,
+      linear-gradient(var(--c), var(--c)) top left / 1px var(--t),
+      linear-gradient(var(--c), var(--c)) top right / var(--t) 1px,
+      linear-gradient(var(--c), var(--c)) top right / 1px var(--t),
+      linear-gradient(var(--c), var(--c)) bottom left / var(--t) 1px,
+      linear-gradient(var(--c), var(--c)) bottom left / 1px var(--t),
+      linear-gradient(var(--c), var(--c)) bottom right / var(--t) 1px,
+      linear-gradient(var(--c), var(--c)) bottom right / 1px var(--t);
+    background-repeat: no-repeat;
+  }
+
+  /* Case-study body copy (MDX). */
+  .prose {
+    @apply text-[1.0625rem] leading-relaxed;
+  }
+  .prose > :not(figure) {
+    @apply max-w-[68ch];
+  }
+  .prose > * + * {
+    @apply mt-5;
+  }
+  .prose h2 {
+    @apply border-line mt-14 border-t pt-6 text-2xl font-medium tracking-tight;
+  }
+  .prose h3 {
+    @apply mt-8 text-lg font-medium;
+  }
+  .prose ul {
+    @apply space-y-2 pl-5;
+    list-style: square;
+  }
+  .prose li::marker {
+    color: var(--accent);
+  }
+  .prose strong {
+    @apply font-semibold;
+  }
+  .prose code {
+    @apply bg-surface px-1 py-0.5 font-mono text-[0.9em];
+  }
+  .prose a {
+    @apply text-accent underline;
+  }
+}
+
+/* Motion: only when the user hasn't asked for less of it. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+  @view-transition {
+    navigation: auto;
+  }
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+@keyframes reveal {
+  from {
+    opacity: 0.001;
+    translate: 0 1.25rem;
+  }
+}
