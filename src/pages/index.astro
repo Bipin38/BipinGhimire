@@ -67,7 +67,7 @@ const specRow = 'border-line grid gap-x-8 gap-y-0.5 border-t py-3 sm:grid-cols-[
           <p>{p}</p>
         ))}
       </div>
-      <figure class="md:order-none order-first max-w-52">
+      <div class="md:order-none order-first max-w-52">
         <div class="ticks bg-surface/60 grid aspect-[4/5] place-items-center p-2">
           {profile.photo ? (
             <Image
@@ -83,10 +83,7 @@ const specRow = 'border-line grid gap-x-8 gap-y-0.5 border-t py-3 sm:grid-cols-[
             </span>
           )}
         </div>
-        <figcaption class="label mt-3 normal-case">
-          Fig. 1 — {profile.name}, {profile.location}
-        </figcaption>
-      </figure>
+      </div>
     </div>
 
     <h3 class="label mt-14">Education</h3>
