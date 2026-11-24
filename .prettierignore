@@ -1,0 +1,5 @@
+dist/
+.astro/
+docs/
+package-lock.json
+public/
