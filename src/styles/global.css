@@ -96,39 +96,6 @@
       linear-gradient(var(--c), var(--c)) bottom right / 1px var(--t);
     background-repeat: no-repeat;
   }
-
-  /* Case-study body copy (MDX). */
-  .prose {
-    @apply text-[1.0625rem] leading-relaxed;
-  }
-  .prose > :not(figure) {
-    @apply max-w-[68ch];
-  }
-  .prose > * + * {
-    @apply mt-5;
-  }
-  .prose h2 {
-    @apply border-line mt-14 border-t pt-6 text-2xl font-medium tracking-tight;
-  }
-  .prose h3 {
-    @apply mt-8 text-lg font-medium;
-  }
-  .prose ul {
-    @apply space-y-2 pl-5;
-    list-style: square;
-  }
-  .prose li::marker {
-    color: var(--accent);
-  }
-  .prose strong {
-    @apply font-semibold;
-  }
-  .prose code {
-    @apply bg-surface px-1 py-0.5 font-mono text-[0.9em];
-  }
-  .prose a {
-    @apply text-accent underline;
-  }
 }
 
 /* Motion: only when the user hasn't asked for less of it. */

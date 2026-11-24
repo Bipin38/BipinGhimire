@@ -19,17 +19,15 @@ npm run format     # fix formatting
 
 All content lives in typed data files. Components only render it.
 
-| What                                                | File                            |
-| --------------------------------------------------- | ------------------------------- |
-| Name, role, tagline, bio, contact, education, certs | `src/data/profile.ts`           |
-| Projects (engineering and research)                 | `src/data/projects.ts`          |
-| Experience timeline                                 | `src/data/experience.ts`        |
-| Skills                                              | `src/data/skills.ts`            |
-| Publications                                        | `src/data/publications.ts`      |
-| Case-study pages                                    | `src/pages/projects/<slug>.mdx` |
+| What                                                | File                       |
+| --------------------------------------------------- | -------------------------- |
+| Name, role, tagline, bio, contact, education, certs | `src/data/profile.ts`      |
+| Projects (engineering and research)                 | `src/data/projects.ts`     |
+| Experience timeline                                 | `src/data/experience.ts`   |
+| Skills                                              | `src/data/skills.ts`       |
+| Publications                                        | `src/data/publications.ts` |
 
-- **Projects.** `featured: true` gives a project the full spec table, and the rest appear in the compact "Also built" list. `kind` puts it under Work or Research.
-- **Case studies.** To add one, set `caseStudy: true` on the project and create `src/pages/projects/<slug>.mdx` with `layout: ../../layouts/CaseStudy.astro` and `slug: <slug>` in the frontmatter. Use `<Pipeline>` for architecture figures (see the existing case studies).
+- **Projects.** `featured: true` gives a project the full spec table, and the rest appear in the compact "Also built" list. `kind` puts it under Work or Research. `link` adds an external link (for example a project page) under the card.
 - **Photo.** Put the image in `src/assets/`, then set `photo` in `profile.ts`:
 
   ```ts
@@ -63,9 +61,9 @@ The site is served from `/BipinGhimire/` (`base` in `astro.config.mjs`). Changin
 ```
 src/
   data/         content (typed)
-  pages/        index.astro, 404.astro, projects/*.mdx
-  layouts/      Base.astro (head, header, footer), CaseStudy.astro
-  components/   Section, ProjectSpec, ProjectRows, Pipeline
+  pages/        index.astro, 404.astro
+  layouts/      Base.astro (head, header, footer)
+  components/   Section, ProjectSpec, ProjectRows
   styles/       global.css (theme tokens, Tailwind)
   lib/theme.ts  theme toggle + base-path helper
 public/         favicons, og.png

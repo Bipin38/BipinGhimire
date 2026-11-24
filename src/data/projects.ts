@@ -1,5 +1,7 @@
+import type { Link } from './profile';
+
 export interface Project {
-  /** Used as the in-page anchor (#slug) and, with `caseStudy`, the page URL /projects/slug/. */
+  /** Used as the in-page anchor (#slug). */
   slug: string;
   title: string;
   org: string;
@@ -8,7 +10,8 @@ export interface Project {
   kind: 'engineering' | 'research';
   /** Featured projects get the full spec table; the rest are listed compactly. */
   featured: boolean;
-  caseStudy?: boolean;
+  /** External page for the project, shown as a link under its spec table. */
+  link?: Link;
   status?: string;
   problem: string;
   approach: string[];
@@ -26,7 +29,6 @@ export const projects: Project[] = [
     area: 'Data engineering · Cloud architecture',
     kind: 'engineering',
     featured: true,
-    caseStudy: true,
     problem:
       'Clinical and operational data lived in a NextGen EHR SQL Server behind a VPN, with no central store for analytics or automated reporting.',
     approach: [
@@ -178,7 +180,7 @@ export const projects: Project[] = [
     area: 'Dataset · Benchmark · Multimodal VLMs',
     kind: 'research',
     featured: true,
-    caseStudy: true,
+    link: { label: 'Project page', href: 'https://bipin38.github.io/RGB-D-T-Dataset/' },
     status: 'Manuscript under review',
     problem:
       'Assistive wearables need physical awareness — how far, how hot, whether a burner is on — that RGB alone can’t provide. EgoThermal measures how well detectors and VLMs use depth and thermal input to get there.',
@@ -203,7 +205,6 @@ export const projects: Project[] = [
     area: 'Training-free open-vocabulary 3D grounding',
     kind: 'research',
     featured: true,
-    caseStudy: true,
     status: 'First author · manuscript under review',
     problem:
       'Find the object a free-form text query describes inside a 3D Gaussian Splatting scene — without training a model for it.',
@@ -227,6 +228,7 @@ export const projects: Project[] = [
     area: 'Resource-aware 3D grounding',
     kind: 'research',
     featured: true,
+    link: { label: 'Project page', href: 'https://bipin38.github.io/Locus/' },
     status: 'Workshop manuscript',
     problem: 'Ground small objects in previously scanned 3D scenes on a compute budget that suits smart glasses.',
     approach: [
@@ -274,9 +276,3 @@ export const projects: Project[] = [
     results: ['Classifies temporal sequences rather than isolated frames'],
   },
 ];
-
-export const bySlug = (slug: string): Project => {
-  const p = projects.find((x) => x.slug === slug);
-  if (!p) throw new Error(`Unknown project slug: ${slug}`);
-  return p;
-};
