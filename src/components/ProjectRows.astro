@@ -1,0 +1,40 @@
+---
+import type { Project } from '../data/projects';
+
+interface Props {
+  heading: string;
+  projects: Project[];
+}
+const { heading, projects } = Astro.props;
+---
+
+<div class="mt-16">
+  <h3 class="label">{heading}</h3>
+  <ul class="border-line mt-3 border-b">
+    {projects.map((p) => (
+      <li
+        id={p.slug}
+        class="reveal border-line grid scroll-mt-28 gap-x-8 gap-y-1 border-t py-4 md:grid-cols-[7.5rem_1fr_14rem]"
+      >
+        <p class="label pt-0.5">{p.period}</p>
+        <div>
+          <p class="font-medium">
+            {p.title} <span class="text-muted font-normal">· {p.org}</span>
+          </p>
+          <p class="text-muted mt-1 text-sm">{p.problem}</p>
+          <p class="mt-1 text-sm">
+            <span class="text-accent mr-2 align-middle text-[0.6em]" aria-hidden="true">
+              ■
+            </span>
+            {p.results[0]}
+          </p>
+        </div>
+        <ul class="flex flex-wrap content-start gap-1.5 md:justify-end" aria-label="Technologies">
+          {p.stack.slice(0, 4).map((s) => (
+            <li class="tag">{s}</li>
+          ))}
+        </ul>
+      </li>
+    ))}
+  </ul>
+</div>

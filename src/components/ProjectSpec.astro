@@ -1,0 +1,77 @@
+---
+import type { Project } from '../data/projects';
+import { withBase } from '../lib/theme';
+
+interface Props {
+  project: Project;
+}
+const { project: p } = Astro.props;
+const href = p.caseStudy ? withBase(`projects/${p.slug}/`) : undefined;
+const row = 'border-line grid gap-x-8 gap-y-1 border-t py-4 sm:grid-cols-[7.5rem_1fr]';
+---
+
+<article id={p.slug} class="reveal scroll-mt-28">
+  <header class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+    <h3 class="text-xl font-medium tracking-tight md:text-2xl">
+      {href ? (
+        <a href={href} class="hover:text-accent hover:underline">
+          {p.title}
+        </a>
+      ) : (
+        p.title
+      )}
+    </h3>
+    <p class="label">
+      {p.org} · {p.period}
+    </p>
+  </header>
+  <p class="mt-1.5 font-mono text-xs text-accent">
+    {p.area}
+    {p.status && <span class="text-muted"> · {p.status}</span>}
+  </p>
+
+  <dl class="mt-5 border-line border-b">
+    <div class={row}>
+      <dt class="label pt-0.5">Problem</dt>
+      <dd>{p.problem}</dd>
+    </div>
+    <div class={row}>
+      <dt class="label pt-0.5">Approach</dt>
+      <dd>
+        <ul class="text-muted space-y-1.5">
+          {p.approach.map((a) => (
+            <li class="before:text-line before:mr-2 before:content-['—']">{a}</li>
+          ))}
+        </ul>
+      </dd>
+    </div>
+    <div class={row}>
+      <dt class="label pt-0.5">Stack</dt>
+      <dd>
+        <ul class="flex flex-wrap gap-1.5" aria-label="Technologies">
+          {p.stack.map((s) => (
+            <li class="tag">{s}</li>
+          ))}
+        </ul>
+      </dd>
+    </div>
+    <div class={row}>
+      <dt class="label pt-0.5">Result</dt>
+      <dd>
+        <ul class="space-y-1.5">
+          {p.results.map((r) => (
+            <li class="before:text-accent before:mr-2 before:content-['■'] before:text-[0.6em] before:align-middle">
+              {r}
+            </li>
+          ))}
+        </ul>
+      </dd>
+    </div>
+  </dl>
+
+  {href && (
+    <a href={href} class="arrow-link mt-4">
+      Read the case study <span aria-hidden="true">→</span>
+    </a>
+  )}
+</article>

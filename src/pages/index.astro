@@ -1,4 +1,265 @@
 ---
-import { Font } from "astro:assets";
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import ProjectSpec from '../components/ProjectSpec.astro';
+import ProjectRows from '../components/ProjectRows.astro';
+import { profile } from '../data/profile';
+import { projects } from '../data/projects';
+import { experience } from '../data/experience';
+import { skills } from '../data/skills';
+import { publications } from '../data/publications';
+import { withBase } from '../lib/theme';
+
+const of = (kind: 'engineering' | 'research', featured: boolean) =>
+  projects.filter((p) => p.kind === kind && p.featured === featured);
+const titleOf = (slug: string) => projects.find((p) => p.slug === slug)?.title ?? slug;
+const specRow = 'border-line grid gap-x-8 gap-y-0.5 border-t py-3 sm:grid-cols-[7.5rem_1fr]';
 ---
-<html lang="en"><head><meta charset="utf-8" /><title>Bipin Ghimire</title><Font cssVariable="--font-plex-sans" preload /></head><body><h1>Rebuilding…</h1></body></html>
+
+<Base>
+  <!-- 00 · Summary -->
+  <section
+    id="top"
+    aria-label="Introduction"
+    class="grid gap-8 pt-14 pb-20 md:pt-24 lg:grid-cols-12 lg:gap-10 lg:pb-28"
+  >
+    <p class="label lg:col-span-3 lg:pt-4" aria-hidden="true">
+      <span class="text-accent">00</span> — Summary
+    </p>
+    <div class="lg:col-span-9">
+      <h1 class="text-5xl font-semibold tracking-tight md:text-7xl">{profile.name}</h1>
+      <p class="mt-4 text-2xl font-medium tracking-tight md:text-3xl">{profile.role}.</p>
+      <p class="text-muted mt-5 max-w-2xl text-lg leading-relaxed">{profile.tagline}</p>
+
+      <dl class="border-line mt-10 max-w-2xl border-b">
+        {profile.spec.map((s) => (
+          <div class={specRow}>
+            <dt class="label pt-0.5">{s.label}</dt>
+            <dd>{s.value}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="#contact" class="btn btn-primary">
+          Contact <span aria-hidden="true">→</span>
+        </a>
+        {profile.resume && (
+          <a href={withBase(profile.resume)} class="btn">
+            Résumé <span class="text-muted">PDF</span>
+          </a>
+        )}
+        <a href={profile.links.github.href} class="btn ext">
+          GitHub
+        </a>
+        <a href={profile.links.linkedin.href} class="btn ext">
+          LinkedIn
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Section id="about" n="01" title="About">
+    <div class="grid gap-10 md:grid-cols-[1fr_13rem]">
+      <div class="max-w-[68ch] space-y-5 text-[1.0625rem] leading-relaxed">
+        {profile.bio.map((p) => (
+          <p>{p}</p>
+        ))}
+      </div>
+      <figure class="md:order-none order-first max-w-52">
+        <div class="ticks bg-surface/60 grid aspect-[4/5] place-items-center p-2">
+          {profile.photo ? (
+            <Image
+              src={profile.photo}
+              alt={`Portrait of ${profile.name}`}
+              widths={[208, 416]}
+              sizes="13rem"
+              class="size-full object-cover"
+            />
+          ) : (
+            <span class="text-muted font-mono text-3xl tracking-widest" aria-hidden="true">
+              BG
+            </span>
+          )}
+        </div>
+        <figcaption class="label mt-3 normal-case">
+          Fig. 1 — {profile.name}, {profile.location}
+        </figcaption>
+      </figure>
+    </div>
+
+    <h3 class="label mt-14">Education</h3>
+    <dl class="border-line mt-3 border-b">
+      {profile.education.map((e) => (
+        <div class={specRow}>
+          <dt class="label pt-0.5">{e.year}</dt>
+          <dd>
+            <span class="font-medium">{e.degree}</span>
+            <span class="text-muted"> · {e.school}</span>
+            <span class="text-muted block font-mono text-xs mt-1">
+              {e.period} · {e.detail}
+            </span>
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </Section>
+
+  <Section id="work" n="02" title="Selected work">
+    <span id="portfolio" aria-hidden="true"></span>
+    <p class="text-muted max-w-[68ch]">
+      Production data platforms and applications — most of them architected and delivered by me end to end.
+    </p>
+    <div class="mt-10 space-y-16">
+      {of('engineering', true).map((p) => (
+        <ProjectSpec project={p} />
+      ))}
+    </div>
+    <ProjectRows heading="Also built" projects={of('engineering', false)} />
+  </Section>
+
+  <Section id="data-ai" n="03" title="Research — data & AI">
+    <p class="text-muted max-w-[68ch]">
+      Graduate research at the University of Wyoming on multimodal perception for assistive wearables: datasets,
+      benchmarks, and training-free 3D grounding with vision-language models.
+    </p>
+    <div class="mt-10 space-y-16">
+      {of('research', true).map((p) => (
+        <ProjectSpec project={p} />
+      ))}
+    </div>
+    <ProjectRows heading="Earlier" projects={of('research', false)} />
+
+    <h3 class="label mt-16">Publications & manuscripts</h3>
+    <ol class="border-line mt-3 border-b">
+      {publications.map((pub) => (
+        <li class="border-line grid gap-x-8 gap-y-1 border-t py-4 sm:grid-cols-[7.5rem_1fr]">
+          <p class={`label pt-0.5 ${pub.status === 'Published' ? 'text-accent' : ''}`}>{pub.status}</p>
+          <div>
+            <p class="font-medium">
+              {pub.href ? (
+                <a href={pub.href} class="ext hover:underline">
+                  {pub.title}
+                </a>
+              ) : (
+                pub.title
+              )}
+            </p>
+            {pub.authors && <p class="text-muted mt-1 text-sm">{pub.authors}</p>}
+            <p class="text-muted mt-1 font-mono text-xs">{pub.venue}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </Section>
+
+  <Section id="experience" n="04" title="Experience">
+    <ol class="border-line ml-1 border-l">
+      {experience.map((r, i) => (
+        <li class="reveal relative pb-12 pl-7 last:pb-0">
+          <span
+            class={`absolute top-1.5 -left-[5px] size-2.5 border ${i === 0 ? 'border-accent bg-accent' : 'border-muted bg-bg'}`}
+            aria-hidden="true"
+          />
+          <p class="label">{r.period}</p>
+          <h3 class="mt-1 text-lg font-medium">
+            {r.title} <span class="text-muted font-normal">· {r.org}</span>
+          </h3>
+          <p class="text-muted mt-1">{r.summary}</p>
+          {r.engagements && (
+            <ul class="mt-4 space-y-1.5 text-sm">
+              {r.engagements.map((e) => (
+                <li class="grid gap-x-4 sm:grid-cols-[11rem_1fr]">
+                  <span class="text-muted font-mono text-xs pt-0.5">{e.period}</span>
+                  <span>{e.title}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          {r.projects && (
+            <p class="mt-4 text-sm">
+              <span class="label mr-2">Projects</span>
+              {r.projects.map((slug, j) => (
+                <>
+                  {j > 0 && <span class="text-muted"> · </span>}
+                  <a href={`#${slug}`} class="hover:text-accent underline decoration-line hover:decoration-accent">
+                    {titleOf(slug)}
+                  </a>
+                </>
+              ))}
+            </p>
+          )}
+        </li>
+      ))}
+    </ol>
+
+    <h3 id="skills" class="label mt-16 scroll-mt-28">
+      Skills
+    </h3>
+    <dl class="border-line mt-3 border-b">
+      {skills.map((s) => (
+        <div class="border-line grid gap-x-8 gap-y-1 border-t py-3 sm:grid-cols-[11rem_1fr]">
+          <dt class="label pt-0.5">{s.group}</dt>
+          <dd class="leading-relaxed">{s.items.join(' · ')}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <h3 class="label mt-16">Certifications</h3>
+    <ul class="border-line mt-3 border-b">
+      {profile.certifications.map((c) => (
+        <li class="border-line border-t py-3">{c}</li>
+      ))}
+    </ul>
+  </Section>
+
+  <Section id="contact" n="05" title="Contact">
+    <p class="max-w-2xl text-2xl font-medium tracking-tight md:text-3xl">The fastest way to reach me is email.</p>
+    <div class="mt-8 flex flex-wrap items-center gap-3">
+      <a href={`mailto:${profile.email}`} class="btn btn-primary break-all">
+        {profile.email}
+      </a>
+      <button type="button" class="btn" data-copy={profile.email}>
+        <span data-copy-label>Copy address</span>
+      </button>
+      <span class="sr-only" aria-live="polite" data-copy-status></span>
+    </div>
+    <dl class="border-line mt-10 max-w-2xl border-b">
+      <div class={specRow}>
+        <dt class="label pt-0.5">LinkedIn</dt>
+        <dd>
+          <a href={profile.links.linkedin.href} class="ext hover:text-accent">
+            bipin-ghimire-5587311b0
+          </a>
+        </dd>
+      </div>
+      <div class={specRow}>
+        <dt class="label pt-0.5">GitHub</dt>
+        <dd>
+          <a href={profile.links.github.href} class="ext hover:text-accent">
+            Bipin38
+          </a>
+        </dd>
+      </div>
+      <div class={specRow}>
+        <dt class="label pt-0.5">Location</dt>
+        <dd>{profile.location}</dd>
+      </div>
+    </dl>
+  </Section>
+</Base>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-copy]');
+  const label = btn?.querySelector('[data-copy-label]');
+  const status = document.querySelector('[data-copy-status]');
+  btn?.addEventListener('click', async () => {
+    await navigator.clipboard.writeText(btn.dataset['copy'] ?? '');
+    if (label) label.textContent = 'Copied';
+    if (status) status.textContent = 'Email address copied to clipboard';
+    setTimeout(() => {
+      if (label) label.textContent = 'Copy address';
+    }, 2000);
+  });
+</script>

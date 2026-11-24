@@ -18,7 +18,7 @@ export interface Profile {
   bio: string[];
   spec: { label: string; value: string }[];
   links: { github: Link; linkedin: Link };
-  education: { degree: string; school: string; period: string; detail: string }[];
+  education: { year: string; degree: string; school: string; period: string; detail: string }[];
   certifications: string[];
 }
 
@@ -46,12 +46,14 @@ export const profile: Profile = {
   },
   education: [
     {
+      year: '2027',
       degree: 'M.S. Computer Science',
       school: 'University of Wyoming',
       period: 'Aug 2025 – May 2027 (expected)',
       detail: 'GPA 4.00 / 4.00',
     },
     {
+      year: '2023',
       degree: 'B.E. Computer Engineering',
       school: 'Tribhuvan University · Kathmandu Engineering College',
       period: '2019 – 2023',

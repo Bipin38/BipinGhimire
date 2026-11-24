@@ -14,7 +14,8 @@ export const publications: Publication[] = [
     status: 'Published',
   },
   {
-    title: 'EgoThermal: An Egocentric RGB-D-T Dataset and Benchmark for Physical Awareness in Wearable Assistive Devices',
+    title:
+      'EgoThermal: An Egocentric RGB-D-T Dataset and Benchmark for Physical Awareness in Wearable Assistive Devices',
     venue: 'Datasets track submission',
     status: 'Under review',
   },
